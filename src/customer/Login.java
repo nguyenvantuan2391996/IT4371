@@ -108,20 +108,24 @@ public class Login extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
     private Client client = new Client();
-    
+    private static boolean checkConnect = false;
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        client.connectServer();
-        
+        if (!checkConnect) {
+            client.connectServer();
+            client.receiveServer();
+            checkConnect = true;
+        }
+
         Data data = new Data();
-        
+
         data.setMathechinh(Integer.valueOf(mathe.getText().trim()));
+        data.setMathephu1(Integer.valueOf(mathe.getText().trim()));
         data.setMatkhau(matkhau.getText().trim());
         data.setLocation("bank_" + location.getSelectedItem().toString());
-        System.out.println(data.getLocation());
         data.setMessage("login");
-        
+
         client.sendServer(data);
-        client.receiveServer();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

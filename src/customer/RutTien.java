@@ -9,6 +9,7 @@ import controller.Client;
 import entities.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.text.View;
@@ -109,19 +110,29 @@ public class RutTien extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     private Client client = new Client();
     public int mathe;
-    
+    public int hanmuc;
+    public int mathephu;
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data data = new Data();
-        
-        data.setSotienrut(Integer.valueOf(sotienrut.getText()));
-        data.setMathechinh(mathe);
-        data.setMessage("rut tien");
-        
-        client.sendServer(data);
+
+        if (Integer.valueOf(sotienrut.getText()) % 100000 == 0) {
+            data.setSotienrut(Integer.valueOf(sotienrut.getText()));
+            data.setMathechinh(mathe);
+            if (hanmuc != 0) {
+                data.setHanmuc(hanmuc);
+                data.setMathephu1(mathephu);
+            }
+            data.setMessage("rut tien");
+
+            client.sendServer(data);
+        } else {
+            JOptionPane.showMessageDialog(null, "Số tiền cần rút phải là bội của 100.000 vnd");
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

@@ -27,7 +27,7 @@ public class Client {
     public static Thread receiveServer;
     public static Thread sendServer;
     public static TaiKhoan tk = new TaiKhoan();
-    
+
     public void connectServer() {
         try {
             socketClient = new Socket("localhost", 8888);
@@ -54,17 +54,33 @@ public class Client {
                     while (true) {
                         Data dataReceive = (Data) receiveDataServer.readObject();
                         System.out.println("CLient nhan dc data");
-                        if ("login ok".equals(dataReceive.getMessage())) {
+                        if ("login the chinh ok".equals(dataReceive.getMessage())) {
                             Main.login.setVisible(false);
 
                             tk.setVisible(true);
                             tk.thongtinthe.append("Mã thẻ         : " + dataReceive.getMathechinh() + "\n");
                             tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten() + "\n");
                             tk.thongtinthe.append("----------------------------------------" + "\n");
-                            tk.thongtinthe.append("Mã thẻ phụ 1   : " + dataReceive.getMathephu1()+ "\n");
-                            tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten1()+ "\n");
-                            tk.thongtinthe.append("Mã thẻ phụ 2   : " + dataReceive.getMathephu2()+ "\n");
-                            tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten2()+ "\n");
+                            tk.thongtinthe.append("Mã thẻ phụ 1   : " + dataReceive.getMathephu1() + "\n");
+                            tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten1() + "\n");
+                            tk.thongtinthe.append("Mã thẻ phụ 2   : " + dataReceive.getMathephu2() + "\n");
+                            tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten2() + "\n");
+
+                        } else if ("login the phu ok".equals(dataReceive.getMessage())) {
+                            Main.login.setVisible(false);
+
+                            tk.setVisible(true);
+                            tk.thongtinthe.append("Mã thẻ         : " + dataReceive.getMathechinh() + "\n");
+                            tk.thongtinthe.append("----------------------------------------" + "\n");
+                            tk.thongtinthe.append("Mã thẻ phụ     : " + dataReceive.getMathephu1() + "\n");
+                            tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten1() + "\n");
+                            tk.thongtinthe.append("Hạn mức        : " + dataReceive.getHanmuc());
+
+                        } else if ("login admin ok".equals(dataReceive.getMessage())) {
+                            
+
+                        } else if ("login that bai".equals(dataReceive.getMessage())) {
+                            JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu không chính xác !");
 
                         } else if ("check so du ok".equals(dataReceive.getMessage())) {
                             SoDu sd = new SoDu();
@@ -72,13 +88,18 @@ public class Client {
 
                             sd.sodu.setText(String.valueOf(dataReceive.getSodu()));
                         } else if ("rut tien ok".equals(dataReceive.getMessage())) {
-                            JOptionPane.showMessageDialog(null, "Rut tien thanh cong !");
+                            JOptionPane.showMessageDialog(null, "Rút tiền thành công !");
                             tk.rt.setVisible(false);
-                            
+
+                        } else if ("rut tien that bai".equals(dataReceive.getMessage())) {
+                            JOptionPane.showMessageDialog(null, "Rút tiền thất bại !");
+
                         } else if ("doi mat khau ok".equals(dataReceive.getMessage())) {
-                            JOptionPane.showMessageDialog(null, "Doi mat khau thanh cong !");
+                            JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công !");
                             tk.rp.setVisible(false);
-                            
+
+                        } else if ("doi mat khau that bai".equals(dataReceive.getMessage())) {
+                            JOptionPane.showMessageDialog(null, "Đổi mật khẩu thất bại !");
                         }
                     }
                 } catch (Exception e) {

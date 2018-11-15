@@ -102,10 +102,14 @@ public class ResetPassword extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     private Client client = new Client();
     public int mathe;
+    public int mathephu;
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data data = new Data();
         
+        if(mathephu != 0) {
+            data.setMathephu1(mathephu);
+        }
         data.setMatkhau(oldpassword.getText());
         data.setMatkhaumoi(newpassword.getText());
         data.setMathechinh(mathe);

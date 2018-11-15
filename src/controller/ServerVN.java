@@ -51,8 +51,15 @@ public class ServerVN {
                         Data dataSend = null;
                         if ("login".equals(dataReceive.getMessage())) {
                             dataSend = account.checkLogin(dataReceive);
+                            if (dataSend == null) {
+                                dataSend = account.checkLoginThePhu(dataReceive);
+                            }
                             System.out.println("xu ly login");
 
+                        } else if ("login admin".equals(dataReceive.getMessage())) {
+                            dataSend = account.checkLoginAdmin(dataReceive);
+                            System.out.println("Xu ly login admin");
+                            
                         } else if ("check so du".equals(dataReceive.getMessage())) {
                             dataSend = account.checkSoDu(dataReceive);
                             System.out.println("xu ly check so du");
@@ -64,7 +71,9 @@ public class ServerVN {
                         } else if ("doi mat khau".equals(dataReceive.getMessage())) {
                             dataSend = account.doiMatKhau(dataReceive);
                             System.out.println("xu ly doi mat khau");
+
                         }
+
                         sendClient(dataSend);
                     }
                 } catch (Exception e) {

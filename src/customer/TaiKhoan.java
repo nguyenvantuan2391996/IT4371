@@ -6,6 +6,7 @@
 package customer;
 
 import controller.Client;
+import controller.ServerVN;
 import entities.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,7 @@ public class TaiKhoan extends javax.swing.JFrame {
      */
     public TaiKhoan() {
         initComponents();
-        
+
         setLocationRelativeTo(null);
     }
 
@@ -127,11 +128,11 @@ public class TaiKhoan extends javax.swing.JFrame {
     private Client client = new Client();
     public static RutTien rt = new RutTien();
     public static ResetPassword rp = new ResetPassword();
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         Data data = new Data();
-        
+
         data.setMathechinh(Integer.valueOf(thongtinthe.getText().substring(17, 26)));
         data.setMessage("check so du");
 
@@ -140,15 +141,39 @@ public class TaiKhoan extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         rt.mathe = Integer.valueOf(thongtinthe.getText().substring(17, 26));
+        if (thongtinthe.getText().contains("Hạn mức")) {
+            rt.hanmuc = Integer.valueOf(thongtinthe.getText().substring(146, 153));
+            rt.mathephu = Integer.valueOf(thongtinthe.getText().substring(85, 94));
+        }
         rt.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         this.setVisible(false);
+
+        try {
+            Client.socketClient.close();
+            Client.receiveDataServer.close();
+            Client.sendDataServer.close();
+            Client.receiveServer.stop();
+            Client.sendServer.stop();
+
+            ServerVN.receiveDataClient.close();
+            ServerVN.sendDataClient.close();
+            ServerVN.sendclient.stop();
+            ServerVN.serverVN.close();
+            ServerVN.socketVN.close();
+            ServerVN.threadServerVN.stop();
+        } catch (Exception e) {
+        }
+
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         rp.mathe = Integer.valueOf(thongtinthe.getText().substring(17, 26));
+        if (thongtinthe.getText().contains("Hạn mức")) {
+            rp.mathephu = Integer.valueOf(thongtinthe.getText().substring(85, 94));
+        }
         rp.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
