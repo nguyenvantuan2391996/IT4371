@@ -109,14 +109,26 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     private Client client = new Client();
     private static boolean checkConnect = false;
-
+    public static String locationDB;
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (!checkConnect) {
-            client.connectServer();
+            switch(location.getSelectedItem().toString()) {
+                case "vn":
+                    client.connectServer(8888);
+                    break;
+                case "us":
+                    client.connectServer(8889);
+                    break;
+                case "uk":
+                    client.connectServer(8890);
+                    break;
+            }
+            
             client.receiveServer();
             checkConnect = true;
         }
-
+        locationDB = "bank_" + location.getSelectedItem().toString();
         Data data = new Data();
 
         data.setMathechinh(Integer.valueOf(mathe.getText().trim()));
@@ -124,7 +136,7 @@ public class Login extends javax.swing.JFrame {
         data.setMatkhau(matkhau.getText().trim());
         data.setLocation("bank_" + location.getSelectedItem().toString());
         data.setMessage("login");
-
+        
         client.sendServer(data);
     }//GEN-LAST:event_jButton1ActionPerformed
 

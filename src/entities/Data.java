@@ -24,13 +24,14 @@ public class Data implements Serializable {
     private int hanmuc;
     private String message;
     private int sotienrut;
+    private int sotiennap;
     private String matkhaumoi;
     private String location;
     
     public Data() {
     }
 
-    public Data(String matkhau, int mathephu1, int mathephu2, int mathechinh, String hoten, String hoten1, String hoten2, int sodu, int hanmuc, String message, int sotienrut, String matkhaumoi, String location) {
+    public Data(String matkhau, int mathephu1, int mathephu2, int mathechinh, String hoten, String hoten1, String hoten2, int sodu, int hanmuc, String message, int sotienrut, int sotiennap, String matkhaumoi, String location) {
         this.matkhau = matkhau;
         this.mathephu1 = mathephu1;
         this.mathephu2 = mathephu2;
@@ -42,6 +43,7 @@ public class Data implements Serializable {
         this.hanmuc = hanmuc;
         this.message = message;
         this.sotienrut = sotienrut;
+        this.sotiennap = sotiennap;
         this.matkhaumoi = matkhaumoi;
         this.location = location;
     }
@@ -132,6 +134,14 @@ public class Data implements Serializable {
 
     public void setSotienrut(int sotienrut) {
         this.sotienrut = sotienrut;
+    }
+
+    public int getSotiennap() {
+        return sotiennap;
+    }
+
+    public void setSotiennap(int sotiennap) {
+        this.sotiennap = sotiennap;
     }
 
     public String getMatkhaumoi() {

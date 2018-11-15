@@ -6,6 +6,7 @@
 package customer;
 
 import controller.Client;
+import static customer.Login.locationDB;
 import entities.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -120,7 +121,8 @@ public class RutTien extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data data = new Data();
 
-        if (Integer.valueOf(sotienrut.getText()) % 100000 == 0) {
+        if (Integer.valueOf(sotienrut.getText()) % 100000 == 0 && Integer.valueOf(sotienrut.getText()) > 0) {
+            data.setLocation(Login.locationDB);
             data.setSotienrut(Integer.valueOf(sotienrut.getText()));
             data.setMathechinh(mathe);
             if (hanmuc != 0) {

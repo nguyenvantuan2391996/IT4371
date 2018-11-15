@@ -7,6 +7,7 @@ package customer;
 
 import controller.Client;
 import controller.ServerVN;
+import static customer.Login.locationDB;
 import entities.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -132,7 +133,8 @@ public class TaiKhoan extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         Data data = new Data();
-
+        
+        data.setLocation(Login.locationDB);
         data.setMathechinh(Integer.valueOf(thongtinthe.getText().substring(17, 26)));
         data.setMessage("check so du");
 
@@ -160,7 +162,7 @@ public class TaiKhoan extends javax.swing.JFrame {
 
             ServerVN.receiveDataClient.close();
             ServerVN.sendDataClient.close();
-            ServerVN.sendclient.stop();
+            ServerVN.sendclientVN.stop();
             ServerVN.serverVN.close();
             ServerVN.socketVN.close();
             ServerVN.threadServerVN.stop();

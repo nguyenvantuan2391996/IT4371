@@ -6,6 +6,7 @@
 package customer;
 
 import controller.Client;
+import static customer.Login.locationDB;
 import entities.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,6 +111,7 @@ public class ResetPassword extends javax.swing.JFrame {
         if(mathephu != 0) {
             data.setMathephu1(mathephu);
         }
+        data.setLocation(Login.locationDB);
         data.setMatkhau(oldpassword.getText());
         data.setMatkhaumoi(newpassword.getText());
         data.setMathechinh(mathe);

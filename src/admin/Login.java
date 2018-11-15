@@ -6,6 +6,7 @@
 package admin;
 
 import controller.Client;
+import static customer.Login.locationDB;
 import entities.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -104,6 +105,7 @@ public class Login extends javax.swing.JFrame {
 
     private Client client = new Client();
     private static boolean checkConnect = false;
+    public static String locationDB;
 
     private void locationcbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationcbActionPerformed
         // TODO add your handling code here:
@@ -111,11 +113,21 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (!checkConnect) {
-            client.connectServer();
+            switch (locationcb.getSelectedItem().toString()) {
+                case "vn":
+                    client.connectServer(8888);
+                    break;
+                case "us":
+                    client.connectServer(8889);
+                    break;
+                case "uk":
+                    client.connectServer(8890);
+                    break;
+            }
             client.receiveServer();
             checkConnect = true;
         }
-
+        locationDB = "bank_" + locationcb.getSelectedItem().toString();
         Data data = new Data();
 
         data.setMatkhau(matkhau.getText().trim());

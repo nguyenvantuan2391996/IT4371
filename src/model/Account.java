@@ -10,6 +10,7 @@ import connectDB.ConnectDB;
 import entities.Data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *
@@ -44,7 +45,7 @@ public class Account extends ConnectDB {
             } else {
                 dataSend = new Data();
                 dataSend.setMessage("login that bai");
-                
+
             }
         } catch (Exception e) {
             System.out.println("Connect DB fail !");
@@ -160,9 +161,13 @@ public class Account extends ConnectDB {
                 dataSend = new Data();
                 dataSend.setSodu(rs.getInt("sodu"));
                 dataSend.setMessage("check so du ok");
+            } else {
+                dataSend = new Data();
+                dataSend.setMessage("check so du that bai");
             }
         } catch (Exception e) {
-            System.out.println("Connect DB fail !");
+            dataSend = new Data();
+            dataSend.setMessage("check so du that bai");
         }
 
         return dataSend;
@@ -268,14 +273,167 @@ public class Account extends ConnectDB {
         return dataSend;
     }
 
+    public Data getThongTinThe(Data data) {
+        Data dataSend = null;
+        connVN = openConnection(data.getLocation());
+
+        String sql = "select *"
+                + " from thechinh, thephu"
+                + " where thechinh.mathechinh = thephu.mathechinh and thechinh.mathechinh = ?";
+
+        try {
+            stmt = connVN.prepareStatement(sql);
+
+            stmt.setInt(1, data.getMathechinh());
+
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                dataSend = new Data();
+                dataSend.setMathechinh(rs.getInt("mathechinh"));
+                dataSend.setHoten(rs.getString("hoten"));
+                dataSend.setSodu(rs.getInt("sodu"));
+                dataSend.setMathephu1(rs.getInt("mathephu"));
+                dataSend.setHoten1(rs.getString("hotenthephu"));
+
+                rs.next();
+                dataSend.setMathephu2(rs.getInt("mathephu"));
+                dataSend.setHoten2(rs.getString("hotenthephu"));
+                dataSend.setMessage("xem chi tiet the ok");
+            } else {
+                dataSend = new Data();
+                dataSend.setMessage("xem chi tiet that bai");
+            }
+        } catch (Exception e) {
+            System.out.println("Connect DB fail !");
+        }
+
+        return dataSend;
+    }
+
+    public Data napTien(Data data) {
+        Data dataSend = checkSoDu(data);
+        connVN = openConnection(data.getLocation());
+
+        String sql = "update thechinh"
+                + " set sodu = ?"
+                + " where mathechinh = ?";
+
+        try {
+            stmt = connVN.prepareStatement(sql);
+
+            stmt.setInt(1, dataSend.getSodu() + data.getSotiennap());
+            stmt.setInt(2, data.getMathechinh());
+
+            stmt.executeUpdate();
+            dataSend.setMessage("nap tien ok");
+        } catch (Exception e) {
+            dataSend.setMessage("nap tien that bai");
+        }
+
+        return dataSend;
+    }
+
+    public Data taoTheChinh(Data data) {
+        Data dataSend = null;
+        connVN = openConnection(data.getLocation());
+
+        String sql = "insert into thechinh(mathechinh, matkhau, hoten, sodu)"
+                + " values(?,?,?,?)";
+
+        try {
+            stmt = connVN.prepareStatement(sql);
+
+            stmt.setInt(1, data.getMathechinh());
+            stmt.setString(2, data.getMatkhau());
+            stmt.setString(3, data.getHoten());
+            stmt.setInt(4, data.getSodu());
+
+            stmt.executeUpdate();
+            dataSend = new Data();
+            dataSend.setMessage("tao the chinh ok");
+        } catch (Exception e) {
+            dataSend = new Data();
+            dataSend.setMessage("tao the chinh that bai");
+        }
+
+        return dataSend;
+    }
+
+    public Data taoThePhu(Data data) {
+        Data dataSend = null;
+        connVN = openConnection(data.getLocation());
+
+        String sql = "insert into thephu(mathephu, mathechinh, matkhau, hotenthephu, hanmuc)"
+                + " values(?,?,?,?,?)";
+
+        try {
+            stmt = connVN.prepareStatement(sql);
+
+            stmt.setInt(1, data.getMathephu1());
+            stmt.setInt(2, data.getMathechinh());
+            stmt.setString(3, data.getMatkhau());
+            stmt.setString(4, data.getHoten());
+            stmt.setInt(5, data.getHanmuc());
+
+            stmt.executeUpdate();
+            dataSend = new Data();
+            dataSend.setMessage("tao the phu ok");
+        } catch (Exception e) {
+            dataSend = new Data();
+            dataSend.setMessage("tao the phu that bai");
+        }
+
+        return dataSend;
+    }
+
+    public Data xoaThe(Data data) throws SQLException {
+        Data dataSend = null;
+        connVN = openConnection(data.getLocation());
+
+        String sqlXoaThePhu = "delete from thephu"
+                + " where mathechinh = ?";
+
+        String sqlXoaTheChinh = "delete from thechinh"
+                + " where mathechinh = ?";
+
+        try {
+
+            connVN.setAutoCommit(false);
+
+            stmt = connVN.prepareStatement(sqlXoaThePhu);
+
+            stmt.setInt(1, data.getMathechinh());
+
+            stmt.executeUpdate();
+
+            stmt = connVN.prepareStatement(sqlXoaTheChinh);
+
+            stmt.setInt(1, data.getMathechinh());
+
+            stmt.executeUpdate();
+            connVN.setAutoCommit(true);
+
+            dataSend = new Data();
+            dataSend.setMessage("xoa the ok");
+        } catch (Exception e) {
+            dataSend = new Data();
+            dataSend.setMessage("xoa the that bai");
+            connVN.rollback();
+        }
+
+        return dataSend;
+    }
+
     public static void main(String[] args) {
         Data data = new Data();
-        data.setMathephu1(888888888);
+        data.setMathechinh(123456789);
         data.setMatkhau("root");
-        data.setMatkhaumoi("ngothanthhuy");
+        data.setMatkhaumoi("1");
+        data.setSotiennap(1000000);
         data.setLocation("bank_vn");
 
         Account a = new Account();
-        System.out.println(a.checkLoginAdmin(data));
+        System.out.println(a.napTien(data));
     }
 }

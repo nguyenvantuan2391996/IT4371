@@ -22,9 +22,9 @@ public class ServerVN {
     public static Socket socketVN;
     public static ObjectInputStream receiveDataClient;
     public static ObjectOutputStream sendDataClient;
-    public static Account account = new Account();
+    public static Account accountVN = new Account();
     public static Thread threadServerVN;
-    public static Thread sendclient;
+    public static Thread sendclientVN;
 
     public static void communicateClient() {
         threadServerVN = new Thread(new Runnable() {
@@ -50,28 +50,47 @@ public class ServerVN {
                         System.out.println("xu ly data tu client");
                         Data dataSend = null;
                         if ("login".equals(dataReceive.getMessage())) {
-                            dataSend = account.checkLogin(dataReceive);
+                            dataSend = accountVN.checkLogin(dataReceive);
                             if (dataSend == null) {
-                                dataSend = account.checkLoginThePhu(dataReceive);
+                                dataSend = accountVN.checkLoginThePhu(dataReceive);
                             }
                             System.out.println("xu ly login");
 
                         } else if ("login admin".equals(dataReceive.getMessage())) {
-                            dataSend = account.checkLoginAdmin(dataReceive);
+                            dataSend = accountVN.checkLoginAdmin(dataReceive);
                             System.out.println("Xu ly login admin");
-                            
+
                         } else if ("check so du".equals(dataReceive.getMessage())) {
-                            dataSend = account.checkSoDu(dataReceive);
+                            dataSend = accountVN.checkSoDu(dataReceive);
                             System.out.println("xu ly check so du");
 
                         } else if ("rut tien".equals(dataReceive.getMessage())) {
-                            dataSend = account.rutTien(dataReceive);
+                            dataSend = accountVN.rutTien(dataReceive);
                             System.out.println("xu ly rut tien");
 
                         } else if ("doi mat khau".equals(dataReceive.getMessage())) {
-                            dataSend = account.doiMatKhau(dataReceive);
+                            dataSend = accountVN.doiMatKhau(dataReceive);
                             System.out.println("xu ly doi mat khau");
 
+                        } else if ("xem chi tiet the".equals(dataReceive.getMessage())) {
+                            dataSend = accountVN.getThongTinThe(dataReceive);
+                            System.out.println("xu ly xem chi tiet the");
+
+                        } else if ("nap tien the".equals(dataReceive.getMessage())) {
+                            dataSend = accountVN.napTien(dataReceive);
+                            System.out.println("xu ly nap tien the");
+
+                        } else if ("tao the chinh".equals(dataReceive.getMessage())) {
+                            dataSend = accountVN.taoTheChinh(dataReceive);
+                            System.out.println("xu ly tao the chinh");
+
+                        } else if ("tao the phu".equals(dataReceive.getMessage())) {
+                            dataSend = accountVN.taoThePhu(dataReceive);
+                            System.out.println("xu ly tao the phu");
+
+                        } else if ("xoa the".equals(dataReceive.getMessage())) {
+                            dataSend = accountVN.xoaThe(dataReceive);
+                            System.out.println("xu ly tao xoa the");
                         }
 
                         sendClient(dataSend);
@@ -85,7 +104,7 @@ public class ServerVN {
     }
 
     public static void sendClient(Data dataSend) {
-        sendclient = new Thread(new Runnable() {
+        sendclientVN = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -97,7 +116,7 @@ public class ServerVN {
                 }
             }
         });
-        sendclient.start();
+        sendclientVN.start();
     }
 
     public static void main(String[] args) {
