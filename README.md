@@ -1,4 +1,4 @@
-# IT4371
+# IT4371 Distributed System
                                                 Distributed System
  - IDE : Netbean, Java.
  - Database : MySQL.
