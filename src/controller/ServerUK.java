@@ -32,13 +32,13 @@ public class ServerUK {
             public void run() {
                 try {
 
-                    serverUK = new ServerSocket(8889);
+                    serverUK = new ServerSocket(8890);
                     System.out.println("Server is starting.........");
 
                     // chap nhan ket noi
                     socketUK = serverUK.accept();
 
-                    System.out.println("Client US has been connected");
+                    System.out.println("Client UK has been connected");
 
                     // nhận dữ liệu từ Client 
                     receiveDataClientUK = new ObjectInputStream(socketUK.getInputStream());
