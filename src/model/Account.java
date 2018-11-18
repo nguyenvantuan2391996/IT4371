@@ -18,20 +18,20 @@ import java.sql.SQLException;
  */
 public class Account extends ConnectDB {
 
-    private Connection connVN;
+    private Connection conn;
     private PreparedStatement stmt;
     private ResultSet rs;
 
     public Data checkLoginAdmin(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "select *"
                 + " from admin"
                 + " where taikhoan = ? and matkhau = ?";
 
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setString(1, "root");
             stmt.setString(2, data.getMatkhau());
@@ -62,14 +62,14 @@ public class Account extends ConnectDB {
      */
     public Data checkLogin(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "select *"
                 + " from thechinh, thephu"
                 + " where thechinh.mathechinh = thephu.mathechinh"
                 + " and thechinh.mathechinh = ? and thechinh.matkhau = ?";
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.getMathechinh());
             stmt.setString(2, data.getMatkhau());
@@ -104,14 +104,14 @@ public class Account extends ConnectDB {
      */
     public Data checkLoginThePhu(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "select *"
                 + " from thephu"
                 + " where mathephu = ? and matkhau = ?";
 
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.getMathephu1());
             stmt.setString(2, data.getMatkhau());
@@ -144,14 +144,14 @@ public class Account extends ConnectDB {
      */
     public Data checkSoDu(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "select *"
                 + " from thechinh"
                 + " where mathechinh = ?";
 
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.getMathechinh());
 
@@ -181,7 +181,7 @@ public class Account extends ConnectDB {
      */
     public Data rutTien(Data data) {
         Data dataSend = checkSoDu(data);
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "update thechinh"
                 + " set sodu = ?"
@@ -191,12 +191,12 @@ public class Account extends ConnectDB {
                 + " set hanmuc = ?"
                 + " where mathephu = ?";
         try {
-            connVN.setAutoCommit(false);
+            conn.setAutoCommit(false);
 
             if (data.getHanmuc() != 0) {
                 if (data.getHanmuc() - data.getSotienrut() >= 0) {
 
-                    stmt = connVN.prepareStatement(sqlHanMuc);
+                    stmt = conn.prepareStatement(sqlHanMuc);
 
                     stmt.setInt(1, data.getHanmuc() - data.getSotienrut());
                     stmt.setInt(2, data.getMathephu1());
@@ -209,19 +209,19 @@ public class Account extends ConnectDB {
             }
 
             if (dataSend.getSodu() - data.getSotienrut() >= 0) {
-                stmt = connVN.prepareStatement(sql);
+                stmt = conn.prepareStatement(sql);
 
                 stmt.setInt(1, dataSend.getSodu() - data.getSotienrut());
                 stmt.setInt(2, data.getMathechinh());
 
                 stmt.executeUpdate();
 
-                connVN.commit();
+                conn.commit();
                 dataSend.setMessage("rut tien ok");
             } else {
 
                 dataSend.setMessage("rut tien that bai");
-                connVN.rollback();
+                conn.rollback();
             }
         } catch (Exception e) {
         }
@@ -236,7 +236,7 @@ public class Account extends ConnectDB {
      */
     public Data doiMatKhau(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "update thechinh"
                 + " set matkhau = ?"
@@ -249,12 +249,12 @@ public class Account extends ConnectDB {
         try {
 
             if (data.getMathephu1() != 0) {
-                stmt = connVN.prepareStatement(sqlThePhu);
+                stmt = conn.prepareStatement(sqlThePhu);
                 stmt.setString(1, data.getMatkhaumoi());
                 stmt.setInt(2, data.getMathephu1());
 
             } else {
-                stmt = connVN.prepareStatement(sql);
+                stmt = conn.prepareStatement(sql);
                 stmt.setString(1, data.getMatkhaumoi());
                 stmt.setInt(2, data.getMathechinh());
 
@@ -275,14 +275,14 @@ public class Account extends ConnectDB {
 
     public Data getThongTinThe(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "select *"
                 + " from thechinh, thephu"
                 + " where thechinh.mathechinh = thephu.mathechinh and thechinh.mathechinh = ?";
 
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.getMathechinh());
 
@@ -313,14 +313,14 @@ public class Account extends ConnectDB {
 
     public Data napTien(Data data) {
         Data dataSend = checkSoDu(data);
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "update thechinh"
                 + " set sodu = ?"
                 + " where mathechinh = ?";
 
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, dataSend.getSodu() + data.getSotiennap());
             stmt.setInt(2, data.getMathechinh());
@@ -336,13 +336,13 @@ public class Account extends ConnectDB {
 
     public Data taoTheChinh(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "insert into thechinh(mathechinh, matkhau, hoten, sodu)"
                 + " values(?,?,?,?)";
 
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.getMathechinh());
             stmt.setString(2, data.getMatkhau());
@@ -362,13 +362,13 @@ public class Account extends ConnectDB {
 
     public Data taoThePhu(Data data) {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sql = "insert into thephu(mathephu, mathechinh, matkhau, hotenthephu, hanmuc)"
                 + " values(?,?,?,?,?)";
 
         try {
-            stmt = connVN.prepareStatement(sql);
+            stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.getMathephu1());
             stmt.setInt(2, data.getMathechinh());
@@ -389,7 +389,7 @@ public class Account extends ConnectDB {
 
     public Data xoaThe(Data data) throws SQLException {
         Data dataSend = null;
-        connVN = openConnection(data.getLocation());
+        conn = openConnection(data.getLocation());
 
         String sqlXoaThePhu = "delete from thephu"
                 + " where mathechinh = ?";
@@ -399,27 +399,27 @@ public class Account extends ConnectDB {
 
         try {
 
-            connVN.setAutoCommit(false);
+            conn.setAutoCommit(false);
 
-            stmt = connVN.prepareStatement(sqlXoaThePhu);
-
-            stmt.setInt(1, data.getMathechinh());
-
-            stmt.executeUpdate();
-
-            stmt = connVN.prepareStatement(sqlXoaTheChinh);
+            stmt = conn.prepareStatement(sqlXoaThePhu);
 
             stmt.setInt(1, data.getMathechinh());
 
             stmt.executeUpdate();
-            connVN.setAutoCommit(true);
+
+            stmt = conn.prepareStatement(sqlXoaTheChinh);
+
+            stmt.setInt(1, data.getMathechinh());
+
+            stmt.executeUpdate();
+            conn.setAutoCommit(true);
 
             dataSend = new Data();
             dataSend.setMessage("xoa the ok");
         } catch (Exception e) {
             dataSend = new Data();
             dataSend.setMessage("xoa the that bai");
-            connVN.rollback();
+            conn.rollback();
         }
 
         return dataSend;

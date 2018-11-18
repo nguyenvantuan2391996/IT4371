@@ -6,6 +6,9 @@
 package customer;
 
 import controller.Client;
+import controller.ServerUK;
+import controller.ServerUS;
+import controller.ServerVN;
 import entities.Data;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,6 +113,9 @@ public class Login extends javax.swing.JFrame {
     private Client client = new Client();
     private static boolean checkConnect = false;
     public static String locationDB;
+    private ServerVN svn = new ServerVN();
+    private ServerUS sus = new ServerUS();
+    private ServerUK suk = new ServerUK();
     
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         if (!checkConnect) {
@@ -135,6 +141,7 @@ public class Login extends javax.swing.JFrame {
         data.setMathephu1(Integer.valueOf(mathe.getText().trim()));
         data.setMatkhau(matkhau.getText().trim());
         data.setLocation("bank_" + location.getSelectedItem().toString());
+        data.setPrimary("primary");
         data.setMessage("login");
         
         client.sendServer(data);

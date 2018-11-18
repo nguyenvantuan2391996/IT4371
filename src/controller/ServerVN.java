@@ -5,6 +5,9 @@
  */
 package controller;
 
+import static controller.Client.receiveDataServer;
+import static controller.Client.sendDataServer;
+import static controller.Client.socketClient;
 import entities.Data;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -26,7 +29,17 @@ public class ServerVN {
     public static Thread threadServerVN;
     public static Thread sendclientVN;
 
-    public static void communicateClient() {
+    public static Socket socket1;
+    public static ObjectOutputStream sendDataServerUS;
+    public static Thread sendServerUS;
+
+    public static Socket socket2;
+    public static ObjectOutputStream sendDataServerUK;
+    public static Thread sendServerUK;
+
+    public static boolean primaryVN;
+
+    public void communicateClient() {
         threadServerVN = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -92,8 +105,16 @@ public class ServerVN {
                             dataSend = accountVN.xoaThe(dataReceive);
                             System.out.println("xu ly tao xoa the");
                         }
-
-                        sendClient(dataSend);
+                        if ("primary".equals(dataReceive.getPrimary())) {
+                            primaryVN = true;
+                            dataReceive.setPrimary(null);
+                            connectServerUS();
+                            connectServerUK();
+                        }
+                        if (primaryVN) {
+                            sendClient(dataSend);
+                            sendServerUS(dataReceive);
+                        }
                     }
                 } catch (Exception e) {
                 }
@@ -103,7 +124,7 @@ public class ServerVN {
         threadServerVN.start();
     }
 
-    public static void sendClient(Data dataSend) {
+    public void sendClient(Data dataSend) {
         sendclientVN = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -117,6 +138,75 @@ public class ServerVN {
             }
         });
         sendclientVN.start();
+    }
+
+    public void connectServerUS() {
+        try {
+            socket1 = new Socket("localhost", 8889);
+
+            System.out.println("Connecting to server US ....... \n");
+
+            // gửi dữ liệu cho server
+            sendDataServerUS = new ObjectOutputStream(socket1.getOutputStream());
+
+            System.out.println("Connect Server US success .......\n");
+        } catch (Exception e) {
+        }
+    }
+
+    public void sendServerUS(Data data) {
+        sendServerUS = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    
+                    data.setLocation("bank_us");
+                    sendDataServerUS.writeObject(data);
+                    System.out.println("gui data cho Server US");
+                    sendDataServerUS.flush();
+                    
+                    data.setLocation("bank_uk");
+                    sendServerUK(data);
+                    
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+        });
+
+        sendServerUS.start();
+    }
+
+    public void connectServerUK() {
+        try {
+            socket2 = new Socket("localhost", 8890);
+
+            System.out.println("Connecting to server UK ....... \n");
+
+            // gửi dữ liệu cho server UK
+            sendDataServerUK = new ObjectOutputStream(socket2.getOutputStream());
+
+            System.out.println("Connect Server UK success .......\n");
+        } catch (Exception e) {
+        }
+    }
+
+    public void sendServerUK(Data data) {
+        sendServerUK = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    
+                    sendDataServerUK.writeObject(data);
+                    System.out.println("gui data cho Server UK");
+                    sendDataServerUK.flush();
+
+                } catch (Exception e) {
+                }
+            }
+        });
+
+        sendServerUK.start();
     }
 
     public static void main(String[] args) {

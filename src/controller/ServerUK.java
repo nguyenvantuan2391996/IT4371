@@ -5,6 +5,7 @@
  */
 package controller;
 
+import static controller.ServerUS.socket3;
 import entities.Data;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -26,7 +27,17 @@ public class ServerUK {
     public static Thread threadServerUK;
     public static Thread sendclientUK;
 
-    public static void communicateClient() {
+    public static Socket socket5;
+    public static ObjectOutputStream sendDataServerVN1;
+    public static Thread sendServerVN1;
+
+    public static Socket socket6;
+    public static ObjectOutputStream sendDataServerUS1;
+    public static Thread sendServerUS1;
+
+    public static boolean primaryUK;
+
+    public void communicateClient() {
         threadServerUK = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -92,8 +103,17 @@ public class ServerUK {
                             dataSend = accountUK.xoaThe(dataReceive);
                             System.out.println("xu ly tao xoa the");
                         }
-
-                        sendClient(dataSend);
+                        if ("primary".equals(dataReceive.getPrimary())) {
+                            primaryUK = true;
+                            dataReceive.setPrimary(null);
+                            connectServerUS();
+                            connectServerVN();
+                        }
+                        if (primaryUK) {
+                            sendClient(dataSend);
+                            sendServerUS(dataReceive);
+                            
+                        }
                     }
                 } catch (Exception e) {
                 }
@@ -103,7 +123,7 @@ public class ServerUK {
         threadServerUK.start();
     }
 
-    public static void sendClient(Data dataSend) {
+    public void sendClient(Data dataSend) {
         sendclientUK = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -117,6 +137,73 @@ public class ServerUK {
             }
         });
         sendclientUK.start();
+    }
+
+    public void connectServerVN() {
+        try {
+            socket5 = new Socket("localhost", 8888);
+
+            System.out.println("Connecting to server VN ....... \n");
+
+            // gửi dữ liệu cho server VN
+            sendDataServerVN1 = new ObjectOutputStream(socket5.getOutputStream());
+
+            System.out.println("Connect Server VN success .......\n");
+        } catch (Exception e) {
+        }
+    }
+
+    public void sendServerVN(Data data) {
+        sendServerVN1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    
+                    sendDataServerVN1.writeObject(data);
+                    System.out.println("gui data cho Server VN");
+                    sendDataServerVN1.flush();
+
+                } catch (Exception e) {
+                }
+            }
+        });
+
+        sendServerVN1.start();
+    }
+
+    public void connectServerUS() {
+        try {
+            socket6 = new Socket("localhost", 8889);
+
+            System.out.println("Connecting to server US ....... \n");
+
+            // gửi dữ liệu cho server US
+            sendDataServerUS1 = new ObjectOutputStream(socket6.getOutputStream());
+
+            System.out.println("Connect Server US success .......\n");
+        } catch (Exception e) {
+        }
+    }
+
+    public void sendServerUS(Data data) {
+        sendServerUS1 = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    data.setLocation("bank_us");
+                    sendDataServerUS1.writeObject(data);
+                    System.out.println("gui data cho Server US");
+                    sendDataServerUS1.flush();
+
+                    data.setLocation("bank_vn");
+                    sendServerVN(data);
+                    
+                } catch (Exception e) {
+                }
+            }
+        });
+
+        sendServerUS1.start();
     }
 
     public static void main(String[] args) {

@@ -6,6 +6,9 @@
 package admin;
 
 import controller.Client;
+import controller.ServerUK;
+import controller.ServerUS;
+import controller.ServerVN;
 import static customer.Login.locationDB;
 import entities.Data;
 import java.util.logging.Level;
@@ -106,7 +109,10 @@ public class Login extends javax.swing.JFrame {
     private Client client = new Client();
     private static boolean checkConnect = false;
     public static String locationDB;
-
+    private ServerVN svn = new ServerVN();
+    private ServerUS sus = new ServerUS();
+    private ServerUK suk = new ServerUK();
+    
     private void locationcbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_locationcbActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_locationcbActionPerformed
@@ -132,6 +138,7 @@ public class Login extends javax.swing.JFrame {
 
         data.setMatkhau(matkhau.getText().trim());
         data.setLocation("bank_" + locationcb.getSelectedItem().toString());
+        data.setPrimary("primary");
         data.setMessage("login admin");
 
         client.sendServer(data);
