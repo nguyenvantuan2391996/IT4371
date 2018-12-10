@@ -25,7 +25,7 @@ public class TaoThePhu extends javax.swing.JFrame {
      */
     public TaoThePhu() {
         initComponents();
-        
+
         setLocationRelativeTo(null);
     }
 
@@ -40,7 +40,6 @@ public class TaoThePhu extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        mtchinh = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         mtphu = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
@@ -52,6 +51,7 @@ public class TaoThePhu extends javax.swing.JFrame {
         jLabel6 = new javax.swing.JLabel();
         hanmuc = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
+        mtchinh = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,7 +105,6 @@ public class TaoThePhu extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(mtchinh)
                                     .addComponent(mtphu)
                                     .addComponent(matkhau, javax.swing.GroupLayout.DEFAULT_SIZE, 161, Short.MAX_VALUE)
                                     .addComponent(hoten)
@@ -115,7 +114,8 @@ public class TaoThePhu extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jButton1)
                                 .addGap(18, 18, 18)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(mtchinh, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -124,9 +124,9 @@ public class TaoThePhu extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(mtchinh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                    .addComponent(mtchinh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -154,26 +154,32 @@ public class TaoThePhu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    
+
     private Client client = new Client();
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data data = new Data();
-        
+
         if (Integer.valueOf(hanmuc.getText().trim()) % 100000 == 0 && Integer.valueOf(hanmuc.getText().trim()) > 0) {
             data.setLocation(Login.locationDB);
             data.setMathechinh(Integer.valueOf(mtchinh.getText().trim()));
-            data.setMathephu1(Integer.valueOf(mtphu.getText().trim()));
-            data.setMatkhau(matkhau.getText().trim());
-            data.setHoten(hoten.getText().trim());
-            data.setHanmuc(Integer.valueOf(hanmuc.getText().trim()));
-            data.setMessage("tao the phu");
-            
-            client.sendServer(data);
+
+            if (mtphu.getText().trim().length() == 9) {
+                data.setMathephu1(Integer.valueOf(mtphu.getText().trim()));
+                data.setMatkhau(matkhau.getText().trim());
+                data.setHoten(hoten.getText().trim());
+                data.setHanmuc(Integer.valueOf(hanmuc.getText().trim()));
+                data.setMessage("tao the phu");
+
+                client.sendServer(data);
+            } else {
+                JOptionPane.showMessageDialog(null, "Mã thẻ phải có 9 chữ số");
+            }
+
         } else {
             JOptionPane.showMessageDialog(null, "Số tiền hạn mức phải là bội của 100.000 vnd");
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -239,7 +245,7 @@ public class TaoThePhu extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     public javax.swing.JPasswordField matkhau;
-    public javax.swing.JTextField mtchinh;
+    public javax.swing.JLabel mtchinh;
     public javax.swing.JTextField mtphu;
     // End of variables declaration//GEN-END:variables
 }

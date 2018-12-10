@@ -5,6 +5,7 @@
  */
 package admin;
 
+import static admin.TaoTheChinh.buttonTTP;
 import controller.Client;
 import controller.ServerVN;
 import java.util.logging.Level;
@@ -174,6 +175,7 @@ public class QuanLyNganHang extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         ttc.setVisible(true);
+        ttc.buttonTTP.setEnabled(false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed

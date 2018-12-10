@@ -121,19 +121,16 @@ public class RutTien extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data data = new Data();
 
-        if (Integer.valueOf(sotienrut.getText()) % 100000 == 0 && Integer.valueOf(sotienrut.getText()) > 0) {
+        if (Integer.valueOf(sotienrut.getText()) % 10000 == 0 && Integer.valueOf(sotienrut.getText()) > 0) {
             data.setLocation(Login.locationDB);
             data.setSotienrut(Integer.valueOf(sotienrut.getText()));
             data.setMathechinh(mathe);
-            if (hanmuc != 0) {
-                data.setHanmuc(hanmuc);
-                data.setMathephu1(mathephu);
-            }
+            data.setMathephu1(mathephu);
             data.setMessage("rut tien");
 
             client.sendServer(data);
         } else {
-            JOptionPane.showMessageDialog(null, "Số tiền cần rút phải là bội của 100.000 vnd");
+            JOptionPane.showMessageDialog(null, "Số tiền cần rút phải là bội của 10.000 vnd");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 

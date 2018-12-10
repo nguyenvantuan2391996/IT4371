@@ -6,6 +6,7 @@
 package controller;
 
 import admin.QuanLyNganHang;
+import admin.TaoTheChinh;
 import customer.Login;
 import customer.SoDu;
 import customer.TaiKhoan;
@@ -37,7 +38,7 @@ public class Client {
         try {
             socketClient = new Socket("localhost", port);
             System.out.println("Connecting to server ....... \n");
-
+//            Thread.sleep(5000);
             // gửi dữ liệu cho server
             sendDataServer = new ObjectOutputStream(socketClient.getOutputStream());
             // nhận dữ liệu từ server
@@ -62,6 +63,7 @@ public class Client {
                     while (true) {
                         Data dataReceive = (Data) receiveDataServer.readObject();
                         System.out.println("Client nhan dc data");
+//                        Thread.sleep(5000);
                         if ("login the chinh ok".equals(dataReceive.getMessage())) {
                             Main.login.setVisible(false);
 
@@ -138,6 +140,7 @@ public class Client {
 
                         } else if ("tao the chinh ok".equals(dataReceive.getMessage())) {
                             JOptionPane.showMessageDialog(null, "Tạo thẻ chính thành công !");
+                            TaoTheChinh.buttonTTP.setEnabled(true);
 
                         } else if ("tao the chinh that bai".equals(dataReceive.getMessage())) {
                             JOptionPane.showMessageDialog(null, "Tạo thẻ chính thất bại !");
@@ -177,10 +180,10 @@ public class Client {
 
                     sendDataServer.writeObject(data);
                     System.out.println("gui data cho server");
+//                    Thread.sleep(5000);
                     sendDataServer.flush();
 
                 } catch (Exception e) {
-                    System.out.println(e);
                     System.out.println("Server isn't running ...\n");
                 }
             }

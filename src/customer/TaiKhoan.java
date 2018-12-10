@@ -144,7 +144,6 @@ public class TaiKhoan extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         rt.mathe = Integer.valueOf(thongtinthe.getText().substring(17, 26));
         if (thongtinthe.getText().contains("Hạn mức")) {
-            rt.hanmuc = Integer.valueOf(thongtinthe.getText().substring(146, 153));
             rt.mathephu = Integer.valueOf(thongtinthe.getText().substring(85, 94));
         }
         rt.setVisible(true);

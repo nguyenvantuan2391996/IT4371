@@ -5,7 +5,6 @@
  */
 package controller;
 
-import static controller.Main.login;
 import admin.Login;
 import java.util.logging.Level;
 import java.util.logging.Logger;

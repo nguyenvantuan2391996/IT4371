@@ -172,6 +172,33 @@ public class Account extends ConnectDB {
 
         return dataSend;
     }
+    /**
+     * 
+     * @param data
+     * @return 
+     */
+    public int getHanMuc(Data data) {
+        int hanmuc = 0;
+        conn = openConnection(data.getLocation());
+
+        String sql = "select *"
+                + " from thephu"
+                + " where mathephu = ?";
+
+        try {
+            stmt = conn.prepareStatement(sql);
+
+            stmt.setInt(1, data.getMathephu1());
+            
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                hanmuc = rs.getInt("hanmuc");
+            }
+        } catch (Exception e) {
+        }
+
+        return hanmuc;
+    }
 
     /**
      * Rút tiền
@@ -181,6 +208,7 @@ public class Account extends ConnectDB {
      */
     public Data rutTien(Data data) {
         Data dataSend = checkSoDu(data);
+        int hanmuc = getHanMuc(data);
         conn = openConnection(data.getLocation());
 
         String sql = "update thechinh"
@@ -190,6 +218,8 @@ public class Account extends ConnectDB {
         String sqlHanMuc = "update thephu"
                 + " set hanmuc = ?"
                 + " where mathephu = ?";
+        data.setHanmuc(hanmuc);
+        
         try {
             conn.setAutoCommit(false);
 

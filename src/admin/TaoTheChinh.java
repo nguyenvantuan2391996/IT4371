@@ -24,6 +24,7 @@ public class TaoTheChinh extends javax.swing.JFrame {
      * Creates new form TaoTaiKhoan
      */
     public TaoTheChinh() {
+
         initComponents();
 
         setLocationRelativeTo(null);
@@ -49,7 +50,7 @@ public class TaoTheChinh extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         hoten = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        buttonTTP = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -73,10 +74,10 @@ public class TaoTheChinh extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Tạo thẻ phụ");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        buttonTTP.setText("Tạo thẻ phụ");
+        buttonTTP.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                buttonTTPActionPerformed(evt);
             }
         });
 
@@ -123,7 +124,7 @@ public class TaoTheChinh extends javax.swing.JFrame {
                 .addGap(39, 39, 39)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
+                .addComponent(buttonTTP)
                 .addGap(18, 18, 18)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -155,7 +156,7 @@ public class TaoTheChinh extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
+                    .addComponent(buttonTTP)
                     .addComponent(jButton3))
                 .addContainerGap(38, Short.MAX_VALUE))
         );
@@ -167,29 +168,35 @@ public class TaoTheChinh extends javax.swing.JFrame {
 
     private Client client = new Client();
     public static TaoThePhu ttp = new TaoThePhu();
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data data = new Data();
 
-        if (Integer.valueOf(sotienkhoitao.getText().trim()) % 100000 == 0 && Integer.valueOf(sotienkhoitao.getText().trim()) > 0) {
+        if (Integer.valueOf(sotienkhoitao.getText().trim()) % 10000 == 0 && Integer.valueOf(sotienkhoitao.getText().trim()) > 0) {
             data.setLocation(Login.locationDB);
             data.setSodu(Integer.valueOf(sotienkhoitao.getText().trim()));
-            data.setMathechinh(Integer.valueOf(mathe.getText().trim()));
-            data.setMatkhau(matkhau.getText().trim());
-            data.setHoten(hoten.getText().trim());
-            data.setMessage("tao the chinh");
-            
-            client.sendServer(data);
+
+            if (mathe.getText().trim().length() == 9) {
+                data.setMathechinh(Integer.valueOf(mathe.getText().trim()));
+                data.setMatkhau(matkhau.getText().trim());
+                data.setHoten(hoten.getText().trim());
+                data.setMessage("tao the chinh");
+
+                client.sendServer(data);
+            } else {
+                JOptionPane.showMessageDialog(null, "Mã thẻ phải có 9 chữ số");
+            }
+
         } else {
-            JOptionPane.showMessageDialog(null, "Số tiền khởi tạo phải là bội của 100.000 vnd");
+            JOptionPane.showMessageDialog(null, "Số tiền khởi tạo phải là bội của 10.000 vnd");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void buttonTTPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTTPActionPerformed
         ttp.mtchinh.setText(mathe.getText().trim());
         ttp.setVisible(true);
         this.setVisible(false);
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_buttonTTPActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         this.setVisible(false);
@@ -243,9 +250,9 @@ public class TaoTheChinh extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public static javax.swing.JButton buttonTTP;
     public javax.swing.JTextField hoten;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;

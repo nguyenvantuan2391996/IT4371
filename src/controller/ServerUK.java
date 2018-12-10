@@ -59,6 +59,7 @@ public class ServerUK {
                     while (true) {
                         Data dataReceive = (Data) receiveDataClientUK.readObject();
                         System.out.println("xu ly data tu client");
+//                        Thread.sleep(5000);
                         Data dataSend = null;
                         if ("login".equals(dataReceive.getMessage())) {
                             dataSend = accountUK.checkLogin(dataReceive);
@@ -131,6 +132,7 @@ public class ServerUK {
 
                     sendDataClientUK.writeObject(dataSend);
                     System.out.println("gui data cho client");
+//                    Thread.sleep(5000);
                     sendDataClientUK.flush();
                 } catch (Exception e) {
                 }

@@ -61,6 +61,7 @@ public class ServerVN {
                     while (true) {
                         Data dataReceive = (Data) receiveDataClient.readObject();
                         System.out.println("xu ly data tu client");
+//                        Thread.sleep(5000);
                         Data dataSend = null;
                         if ("login".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.checkLogin(dataReceive);
@@ -132,6 +133,7 @@ public class ServerVN {
 
                     sendDataClient.writeObject(dataSend);
                     System.out.println("gui data cho client");
+//                    Thread.sleep(5000);
                     sendDataClient.flush();
                 } catch (Exception e) {
                 }
