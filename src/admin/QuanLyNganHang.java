@@ -144,21 +144,21 @@ public class QuanLyNganHang extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         this.setVisible(false);
 
-        try {
-            Client.socketClient.close();
-            Client.receiveDataServer.close();
-            Client.sendDataServer.close();
-            Client.receiveServer.stop();
-            Client.sendServer.stop();
-
-            ServerVN.receiveDataClient.close();
-            ServerVN.sendDataClient.close();
-            ServerVN.sendclientVN.stop();
-            ServerVN.serverVN.close();
-            ServerVN.socketVN.close();
-            ServerVN.threadServerVN.stop();
-        } catch (Exception e) {
-        }
+//        try {
+//            Client.socketClient.close();
+//            Client.receiveDataServer.close();
+//            Client.sendDataServer.close();
+//            Client.receiveServer.stop();
+//            Client.sendServer.stop();
+//
+//            ServerVN.receiveDataClient.close();
+//            ServerVN.sendDataClient.close();
+//            ServerVN.sendclientVN.stop();
+//            ServerVN.serverVN.close();
+//            ServerVN.socketVN.close();
+//            ServerVN.threadServerVN.stop();
+//        } catch (Exception e) {
+//        }
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

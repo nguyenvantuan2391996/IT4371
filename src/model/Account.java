@@ -172,10 +172,11 @@ public class Account extends ConnectDB {
 
         return dataSend;
     }
+
     /**
-     * 
+     *
      * @param data
-     * @return 
+     * @return
      */
     public int getHanMuc(Data data) {
         int hanmuc = 0;
@@ -189,7 +190,7 @@ public class Account extends ConnectDB {
             stmt = conn.prepareStatement(sql);
 
             stmt.setInt(1, data.getMathephu1());
-            
+
             rs = stmt.executeQuery();
             if (rs.next()) {
                 hanmuc = rs.getInt("hanmuc");
@@ -200,6 +201,28 @@ public class Account extends ConnectDB {
         return hanmuc;
     }
 
+    public Data getInformation(Data data) {
+        Data dataSend = null;
+        conn = openConnection(data.getLocation());
+
+        String sql = "select *"
+                + " from thephu"
+                + " where mathephu = ?";
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, data.getMathephu1());
+
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                dataSend = new Data();
+                dataSend.setHoten1(rs.getString("hotenthephu"));
+            }
+        } catch (Exception e) {
+        }
+
+        return dataSend;
+    }
+
     /**
      * Rút tiền
      *
@@ -208,52 +231,64 @@ public class Account extends ConnectDB {
      */
     public Data rutTien(Data data) {
         Data dataSend = checkSoDu(data);
-        int hanmuc = getHanMuc(data);
-        conn = openConnection(data.getLocation());
+        Data dataInfor = getInformation(data);
+        synchronized (data) {
+            int hanmuc = getHanMuc(data);
+            conn = openConnection(data.getLocation());
 
-        String sql = "update thechinh"
-                + " set sodu = ?"
-                + " where mathechinh = ?";
+            String sql = "update thechinh"
+                    + " set sodu = ?"
+                    + " where mathechinh = ?";
 
-        String sqlHanMuc = "update thephu"
-                + " set hanmuc = ?"
-                + " where mathephu = ?";
-        data.setHanmuc(hanmuc);
-        
-        try {
-            conn.setAutoCommit(false);
+            String sqlHanMuc = "update thephu"
+                    + " set hanmuc = ?"
+                    + " where mathephu = ?";
+            data.setHanmuc(hanmuc);
 
-            if (data.getHanmuc() != 0) {
-                if (data.getHanmuc() - data.getSotienrut() >= 0) {
+            try {
+                conn.setAutoCommit(false);
 
-                    stmt = conn.prepareStatement(sqlHanMuc);
+                if (data.getHanmuc() != 0) {
+                    if (data.getHanmuc() - data.getSotienrut() >= 0) {
 
-                    stmt.setInt(1, data.getHanmuc() - data.getSotienrut());
-                    stmt.setInt(2, data.getMathephu1());
+                        stmt = conn.prepareStatement(sqlHanMuc);
+
+                        stmt.setInt(1, data.getHanmuc() - data.getSotienrut());
+                        stmt.setInt(2, data.getMathephu1());
+
+                        stmt.executeUpdate();
+
+                        dataSend.setMathechinh(data.getMathechinh());
+                        dataSend.setMathephu1(data.getMathephu1());
+                        dataSend.setHoten1(dataInfor.getHoten1());
+                        dataSend.setHanmuc(data.getHanmuc() - data.getSotienrut());
+                    } else {
+                        dataSend.setMathechinh(data.getMathechinh());
+                        dataSend.setMathephu1(data.getMathephu1());
+                        dataSend.setHoten1(dataInfor.getHoten1());
+                        dataSend.setMessage("rut tien that bai");
+                        dataSend.setHanmuc(hanmuc);
+                        return dataSend;
+                    }
+                }
+
+                if (dataSend.getSodu() - data.getSotienrut() >= 0) {
+                    stmt = conn.prepareStatement(sql);
+
+                    stmt.setInt(1, dataSend.getSodu() - data.getSotienrut());
+                    stmt.setInt(2, data.getMathechinh());
 
                     stmt.executeUpdate();
 
+                    conn.commit();
+                    dataSend.setMessage("rut tien ok");
                 } else {
+
                     dataSend.setMessage("rut tien that bai");
+                    conn.rollback();
                 }
+            } catch (Exception e) {
             }
-
-            if (dataSend.getSodu() - data.getSotienrut() >= 0) {
-                stmt = conn.prepareStatement(sql);
-
-                stmt.setInt(1, dataSend.getSodu() - data.getSotienrut());
-                stmt.setInt(2, data.getMathechinh());
-
-                stmt.executeUpdate();
-
-                conn.commit();
-                dataSend.setMessage("rut tien ok");
-            } else {
-
-                dataSend.setMessage("rut tien that bai");
-                conn.rollback();
-            }
-        } catch (Exception e) {
         }
         return dataSend;
     }

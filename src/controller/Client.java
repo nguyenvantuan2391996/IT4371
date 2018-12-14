@@ -38,7 +38,6 @@ public class Client {
         try {
             socketClient = new Socket("localhost", port);
             System.out.println("Connecting to server ....... \n");
-//            Thread.sleep(5000);
             // gửi dữ liệu cho server
             sendDataServer = new ObjectOutputStream(socketClient.getOutputStream());
             // nhận dữ liệu từ server
@@ -63,7 +62,6 @@ public class Client {
                     while (true) {
                         Data dataReceive = (Data) receiveDataServer.readObject();
                         System.out.println("Client nhan dc data");
-//                        Thread.sleep(5000);
                         if ("login the chinh ok".equals(dataReceive.getMessage())) {
                             Main.login.setVisible(false);
 
@@ -108,9 +106,23 @@ public class Client {
                             tk.rt.setVisible(false);
                             qlnh.rt.setVisible(false);
 
+                            tk.thongtinthe.setText("");
+                            tk.thongtinthe.append("Mã thẻ         : " + dataReceive.getMathechinh() + "\n");
+                            tk.thongtinthe.append("----------------------------------------" + "\n");
+                            tk.thongtinthe.append("Mã thẻ phụ     : " + dataReceive.getMathephu1() + "\n");
+                            tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten1() + "\n");
+                            tk.thongtinthe.append("Hạn mức        : " + dataReceive.getHanmuc());
+
                         } else if ("rut tien that bai".equals(dataReceive.getMessage())) {
                             JOptionPane.showMessageDialog(null, "Rút tiền thất bại !");
+                            tk.rt.setVisible(false);
 
+                            tk.thongtinthe.setText("");
+                            tk.thongtinthe.append("Mã thẻ         : " + dataReceive.getMathechinh() + "\n");
+                            tk.thongtinthe.append("----------------------------------------" + "\n");
+                            tk.thongtinthe.append("Mã thẻ phụ     : " + dataReceive.getMathephu1() + "\n");
+                            tk.thongtinthe.append("Tên khách hàng : " + dataReceive.getHoten1() + "\n");
+                            tk.thongtinthe.append("Hạn mức        : " + dataReceive.getHanmuc());
                         } else if ("doi mat khau ok".equals(dataReceive.getMessage())) {
                             JOptionPane.showMessageDialog(null, "Đổi mật khẩu thành công !");
                             tk.rp.setVisible(false);
@@ -177,10 +189,8 @@ public class Client {
             @Override
             public void run() {
                 try {
-
                     sendDataServer.writeObject(data);
                     System.out.println("gui data cho server");
-//                    Thread.sleep(5000);
                     sendDataServer.flush();
 
                 } catch (Exception e) {

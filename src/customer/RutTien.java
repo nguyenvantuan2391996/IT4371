@@ -8,6 +8,8 @@ package customer;
 import controller.Client;
 import static customer.Login.locationDB;
 import entities.Data;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -120,12 +122,14 @@ public class RutTien extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         Data data = new Data();
-
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+        
         if (Integer.valueOf(sotienrut.getText()) % 10000 == 0 && Integer.valueOf(sotienrut.getText()) > 0) {
             data.setLocation(Login.locationDB);
             data.setSotienrut(Integer.valueOf(sotienrut.getText()));
             data.setMathechinh(mathe);
             data.setMathephu1(mathephu);
+            data.setTimeStamp(timeStamp);
             data.setMessage("rut tien");
 
             client.sendServer(data);

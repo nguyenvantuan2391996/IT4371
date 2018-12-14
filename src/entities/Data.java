@@ -27,12 +27,13 @@ public class Data implements Serializable {
     private int sotiennap;
     private String matkhaumoi;
     private String location;
+    private String timeStamp;
     private String primary;
 
     public Data() {
     }
 
-    public Data(String matkhau, int mathephu1, int mathephu2, int mathechinh, String hoten, String hoten1, String hoten2, int sodu, int hanmuc, String message, int sotienrut, int sotiennap, String matkhaumoi, String location, String primary) {
+    public Data(String matkhau, int mathephu1, int mathephu2, int mathechinh, String hoten, String hoten1, String hoten2, int sodu, int hanmuc, String message, int sotienrut, int sotiennap, String matkhaumoi, String location, String timeStamp, String primary) {
         this.matkhau = matkhau;
         this.mathephu1 = mathephu1;
         this.mathephu2 = mathephu2;
@@ -47,6 +48,7 @@ public class Data implements Serializable {
         this.sotiennap = sotiennap;
         this.matkhaumoi = matkhaumoi;
         this.location = location;
+        this.timeStamp = timeStamp;
         this.primary = primary;
     }
 
@@ -160,6 +162,14 @@ public class Data implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public String getPrimary() {

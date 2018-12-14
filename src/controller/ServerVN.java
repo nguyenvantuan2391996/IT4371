@@ -5,9 +5,6 @@
  */
 package controller;
 
-import static controller.Client.receiveDataServer;
-import static controller.Client.sendDataServer;
-import static controller.Client.socketClient;
 import entities.Data;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -21,90 +18,77 @@ import model.Account;
  */
 public class ServerVN {
 
-    public static ServerSocket serverVN;
-    public static Socket socketVN;
-    public static ObjectInputStream receiveDataClient;
-    public static ObjectOutputStream sendDataClient;
     public static Account accountVN = new Account();
-    public static Thread threadServerVN;
-    public static Thread sendclientVN;
-
-    public static Socket socket1;
     public static ObjectOutputStream sendDataServerUS;
-    public static Thread sendServerUS;
-
-    public static Socket socket2;
     public static ObjectOutputStream sendDataServerUK;
-    public static Thread sendServerUK;
-
     public static boolean primaryVN;
+    public static int a = 0;
 
-    public void communicateClient() {
-        threadServerVN = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
+    class ThreadSocket extends Thread {
 
-                    serverVN = new ServerSocket(8888);
-                    System.out.println("Server is starting.........");
+        Socket socketVN = null;
 
-                    // chap nhan ket noi
-                    socketVN = serverVN.accept();
+        public ThreadSocket(Socket socketVN) {
+            this.socketVN = socketVN;
+        }
 
-                    System.out.println("Client Viet Nam has been connected");
+        public void run() {
+            try {
 
-                    // nhận dữ liệu từ Client 
-                    receiveDataClient = new ObjectInputStream(socketVN.getInputStream());
-                    // gửi dữ liệu cho client
-                    sendDataClient = new ObjectOutputStream(socketVN.getOutputStream());
+                // nhận dữ liệu từ Client 
+                ObjectInputStream receiveDataClient = new ObjectInputStream(socketVN.getInputStream());
+                // gửi dữ liệu cho client
+                ObjectOutputStream sendDataClient = new ObjectOutputStream(socketVN.getOutputStream());
 
-                    while (true) {
-                        Data dataReceive = (Data) receiveDataClient.readObject();
-                        System.out.println("xu ly data tu client");
-//                        Thread.sleep(5000);
-                        Data dataSend = null;
+                while (true) {
+                    Data dataReceive = (Data) receiveDataClient.readObject();
+                    System.out.println("xu ly data tu client");
+                    Data dataSend = null;
+
+//                    synchronized (dataReceive) {
                         if ("login".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.checkLogin(dataReceive);
                             if (dataSend == null) {
                                 dataSend = accountVN.checkLoginThePhu(dataReceive);
                             }
-                            System.out.println("xu ly login");
+                            System.out.println("Da xu ly login \n");
 
                         } else if ("login admin".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.checkLoginAdmin(dataReceive);
-                            System.out.println("Xu ly login admin");
+                            System.out.println("Da xu ly login admin \n");
 
                         } else if ("check so du".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.checkSoDu(dataReceive);
-                            System.out.println("xu ly check so du");
+                            System.out.println("Da xu ly check so du \n");
 
                         } else if ("rut tien".equals(dataReceive.getMessage())) {
+                            System.out.println("Dang xu ly rut tien \n");
+                            Thread.sleep(10000);
                             dataSend = accountVN.rutTien(dataReceive);
-                            System.out.println("xu ly rut tien");
 
                         } else if ("doi mat khau".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.doiMatKhau(dataReceive);
-                            System.out.println("xu ly doi mat khau");
+                            System.out.println("Da xu ly doi mat khau \n");
 
                         } else if ("xem chi tiet the".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.getThongTinThe(dataReceive);
-                            System.out.println("xu ly xem chi tiet the");
+                            System.out.println("Da xu ly xem chi tiet the \n");
 
                         } else if ("nap tien the".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.napTien(dataReceive);
-                            System.out.println("xu ly nap tien the");
+                            System.out.println("Da xu ly nap tien the \n");
 
                         } else if ("tao the chinh".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.taoTheChinh(dataReceive);
-                            System.out.println("xu ly tao the chinh");
+                            System.out.println("Da xu ly tao the chinh \n");
 
                         } else if ("tao the phu".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.taoThePhu(dataReceive);
-                            System.out.println("xu ly tao the phu");
+                            System.out.println("Da xu ly tao the phu \n");
 
                         } else if ("xoa the".equals(dataReceive.getMessage())) {
                             dataSend = accountVN.xoaThe(dataReceive);
-                            System.out.println("xu ly tao xoa the");
+                            System.out.println("Da xu ly tao xoa the \n");
                         }
                         if ("primary".equals(dataReceive.getPrimary())) {
                             primaryVN = true;
@@ -113,38 +97,40 @@ public class ServerVN {
                             connectServerUK();
                         }
                         if (primaryVN) {
-                            sendClient(dataSend);
+                            // send data processed for client
+                            try {
+                                sendDataClient.writeObject(dataSend);
+                                System.out.println("gui data cho client");
+                                sendDataClient.flush();
+                            } catch (Exception e) {
+                            }
+                            // send data from Client for ServerUS, ServerUK process
                             sendServerUS(dataReceive);
                         }
                     }
-                } catch (Exception e) {
-                }
+//                }
+            } catch (Exception e) {
             }
-        });
-
-        threadServerVN.start();
+        }
     }
 
-    public void sendClient(Data dataSend) {
-        sendclientVN = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
+    public void communicateClient() {
+        try {
+            ServerSocket serverVN = new ServerSocket(8888);
+            System.out.println("Server is starting.........");
 
-                    sendDataClient.writeObject(dataSend);
-                    System.out.println("gui data cho client");
-//                    Thread.sleep(5000);
-                    sendDataClient.flush();
-                } catch (Exception e) {
-                }
+            while (true) {
+                // chap nhan ket noi
+                new ThreadSocket(serverVN.accept()).start();
+                System.out.println("Client Viet Nam has been connected");
             }
-        });
-        sendclientVN.start();
+        } catch (Exception e) {
+        }
     }
 
     public void connectServerUS() {
         try {
-            socket1 = new Socket("localhost", 8889);
+            Socket socket1 = new Socket("localhost", 8889);
 
             System.out.println("Connecting to server US ....... \n");
 
@@ -157,31 +143,24 @@ public class ServerVN {
     }
 
     public void sendServerUS(Data data) {
-        sendServerUS = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    
-                    data.setLocation("bank_us");
-                    sendDataServerUS.writeObject(data);
-                    System.out.println("gui data cho Server US");
-                    sendDataServerUS.flush();
-                    
-                    data.setLocation("bank_uk");
-                    sendServerUK(data);
-                    
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-        });
+        try {
 
-        sendServerUS.start();
+            data.setLocation("bank_us");
+            sendDataServerUS.writeObject(data);
+            System.out.println("gui data cho Server US");
+            sendDataServerUS.flush();
+
+            data.setLocation("bank_uk");
+            sendServerUK(data);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public void connectServerUK() {
         try {
-            socket2 = new Socket("localhost", 8890);
+            Socket socket2 = new Socket("localhost", 8890);
 
             System.out.println("Connecting to server UK ....... \n");
 
@@ -194,21 +173,14 @@ public class ServerVN {
     }
 
     public void sendServerUK(Data data) {
-        sendServerUK = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    
-                    sendDataServerUK.writeObject(data);
-                    System.out.println("gui data cho Server UK");
-                    sendDataServerUK.flush();
+        try {
 
-                } catch (Exception e) {
-                }
-            }
-        });
+            sendDataServerUK.writeObject(data);
+            System.out.println("gui data cho Server UK");
+            sendDataServerUK.flush();
 
-        sendServerUK.start();
+        } catch (Exception e) {
+        }
     }
 
     public static void main(String[] args) {
