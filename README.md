@@ -24,9 +24,8 @@
  The system uses socket communication between client (client) and bank (server).
  
  The test model of MyInternetBanking activities is as follows:
- 
-        1. The system acts as an account creation script, sending money, reporting bugs etc. as described above.
-        2. Same as the main cardholder and supplementary cardholder model. An account can have multiple customers at the same time.
-        3. To ensure data security, backup banks store data in two different data warehouses.
-        4. Two users with the same withdrawal account and data are recorded in two different repositories.
-        5. The MyInternetBanking service needs to ensure consistency in the data at the two repositories.
+      1. The system acts as an account creation script, sending money, reporting bugs etc. as described above.
+      2. Same as the main cardholder and supplementary cardholder model. An account can have multiple customers at the same time.
+      3. To ensure data security, backup banks store data in two different data warehouses.
+      4. Two users with the same withdrawal account and data are recorded in two different repositories.
+      5. The MyInternetBanking service needs to ensure consistency in the data at the two repositories.
